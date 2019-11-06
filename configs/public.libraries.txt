@@ -1,0 +1,3 @@
+libMcClient.so
+libOpenCL.so
+libb2g_audio_jni.so
