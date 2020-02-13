@@ -1,0 +1,97 @@
+on early-init
+   insmod /vendor/lib/modules/synaptics_mmi.ko
+   insmod /vendor/lib/modules/synaptics_dsx_fw_update.ko
+   insmod /vendor/lib/modules/synaptics_dsx_rmi_dev.ko
+   insmod /vendor/lib/modules/sensors_class.ko
+   insmod /vendor/lib/modules/cyttsp_sar.ko
+   insmod /vendor/lib/modules/ldc2114_keys.ko
+   insmod /vendor/lib/modules/tzlog_dump.ko
+
+on init
+   # Change ownership for for HBM feature
+   chown system system /sys/class/graphics/fb0/hbm
+   # Change ownership for for CABC feature
+   chown system system /sys/class/graphics/fb0/cabc
+
+    chmod 0666  /sys/bus/spi/devices/spi32766.0/irq
+    chown system system /sys/bus/spi/devices/spi32766.0/irq
+
+    chmod 0666  /sys/bus/spi/devices/spi32766.0/wakeup_enable
+    chown system system /sys/bus/spi/devices/spi32766.0/wakeup_enable
+
+    chmod 0666  /sys/bus/spi/devices/spi32766.0/clk_enable
+    chown system system /sys/bus/spi/devices/spi32766.0/clk_enable
+
+    chmod 0666  /sys/bus/spi/devices/spi32766.0/hw_enable
+    chown system system /sys/bus/spi/devices/spi32766.0/hw_enable
+
+    chmod 0666  /sys/bus/spi/devices/spi32766.0/irq_enable
+    chown system system /sys/bus/spi/devices/spi32766.0/irq_enable
+
+on post-fs-data
+   # Change ownership and permission for sensor algo
+   chmod 0660 /sys/class/sensor/m_situ_misc/situparams
+   chown system system /sys/class/sensor/m_situ_misc/situparams
+   chmod 0660 /sys/class/sensor/m_situ_misc/situproxcal
+   chown system system /sys/class/sensor/m_situ_misc/situproxcal
+
+on boot
+   # Change the ownership of display TE files for tcmds
+   chown root vendor_tcmd /sys/class/graphics/fb0/te_test
+   chown root vendor_tcmd /sys/class/graphics/fb0/te_enable
+   chown root vendor_tcmd /sys/class/graphics/fb0/frame_counter
+
+   # in FBE mode, /data is here
+   write /sys/block/sdb/queue/read_ahead_kb 512
+
+   # Change ownership and permission for vibrator
+   chown system system /sys/class/leds/vibrator/state
+   chown system system /sys/class/leds/vibrator/duration
+   chown system system /sys/class/leds/vibrator/activate
+   chmod 0660 /sys/class/leds/vibrator/state
+   chmod 0660 /sys/class/leds/vibrator/duration
+   chmod 0660 /sys/class/leds/vibrator/activate
+
+   # add for capsense reset
+   chmod 0660 /sys/class/capsense/reset
+   chown system system /sys/class/capsense/reset
+
+   # Add for goodix fingerprint
+   mkdir /data/vendor/gf_data 0770 system system
+   # Add for fingerprint checkin data
+   mkdir /data/vendor/.fps/ 0770 system vendor_fingerp
+
+   chmod 0664 /mnt/vendor/persist/camera/focus/offset_cal
+   chmod 0664 /mnt/vendor/persist/camera/focus/xtalk_cal
+
+   # Change permission for dual camera calibration data
+   chmod 0664 /mnt/vendor/persist/camera/dualcal/dual_cal_data.bin
+   chmod 0664 /mnt/vendor/persist/camera/dualcal/module_id_main.bin
+   chmod 0664 /mnt/vendor/persist/camera/dualcal/module_id_aux.bin
+
+service vl53l1_daemon /system/bin/vl53l1_daemon
+    class late_start
+    user root
+    group root
+    socket vl53l1_daemon stream 660 root system
+
+service vendor.mmi-laser-sh /vendor/bin/init.mmi.laser.sh
+    class core
+    user root
+    oneshot
+
+on property:ro.build.type=userdebug
+    insmod /vendor/lib/modules/watchdogtest.ko
+
+on property:sys.retaildemo.enabled=1
+    write /sys/devices/platform/charger/force_demo_mode 70
+
+service capsense_reset /vendor/bin/capsense_reset
+    class core
+    user system
+    group system input
+    disabled
+
+on property:sys.boot_completed=1
+  start capsense_reset
+

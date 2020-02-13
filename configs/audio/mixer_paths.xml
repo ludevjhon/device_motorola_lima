@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<mixer>
+    <!-- These are the initial mixer settings -->
+    <ctl name="SPK AMP PCM Gain" value="0" />
+    <ctl name="SPK Digital PCM Volume" value="817" />
+    <ctl name="SPK PCM Soft Ramp" value="2ms" />
+    <ctl name="SPK DSP1 Firmware" value="protectionsp_music" />
+    <ctl name="SPK PCM Source" value="ASP" />
+    <ctl name="SPK DSP1 Preload Switch" value="1" />
+    <ctl name="SPK AMP Enable Switch" value="0" />
+    <ctl name="SPK Fast Use Case Switch Enable" value="0" />
+    <!-- standard mixer end-->
+
+    <path name="music-speaker">
+        <ctl name="SPK PCM Source" value="DSP" />
+        <ctl name="SPK Fast Use Case Delta File" value="fast_switch1.txt" />
+        <ctl name="SPK Fast Use Case Switch Enable" value="1" />
+        <ctl name="SPK AMP PCM Gain" value="17" />
+        <ctl name="SPK AMP Enable Switch" value="1" />
+    </path>
+
+    <path name="voice-speaker">
+        <ctl name="SPK PCM Source" value="DSP" />
+        <ctl name="SPK Fast Use Case Delta File" value="fast_switch2.txt" />
+        <ctl name="SPK Fast Use Case Switch Enable" value="1" />
+        <ctl name="SPK AMP PCM Gain" value="17" />
+        <ctl name="SPK AMP Enable Switch" value="1" />
+    </path>
+
+    <path name="ringtone-speaker">
+        <ctl name="SPK PCM Source" value="DSP" />
+        <ctl name="SPK Fast Use Case Delta File" value="fast_switch3.txt" />
+        <ctl name="SPK Fast Use Case Switch Enable" value="1" />
+        <ctl name="SPK AMP PCM Gain" value="17" />
+        <ctl name="SPK AMP Enable Switch" value="1" />
+    </path>
+
+    <path name="notification-speaker">
+    </path>
+
+    <path name="loopback-mic">
+        <ctl name="SPK Digital PCM Volume" value="650" />
+    </path>
+</mixer>
